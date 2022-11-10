@@ -4,9 +4,9 @@
 ```mermaid
 stateDiagram-v2
   state issue {
+    SI --> Fixing
     II -->  Mac
     II --> CCI
-    SI --> Fixing
     Mac --> Fixing
     CCI --> Support
     }
@@ -49,22 +49,21 @@ stateDiagram-v2
      on CI before starting the release
   end note
 
-  note right of REJ
+  note left of REJ
      These jobs are essential before starting the release 
      and show us that the pipeline is working as expected
   end note
   
   note right of Blocker
-      We can't fix issues related to Gerrit, Jenkins, Gitlab, BitBar, Artifactory
+      We can't fix issues related to Gerrit, Jenkins, Gitlab, AWS, Network, BitBar or Artifactory
   end note
   
 
 
 [*] --> SP
 SP --> BC
-BC --> BA
 BC --> BI
-BA --> REJ
+BC --> REJ
 BI --> ABJ
 ABJ --> REJ
 REJ --> JS
