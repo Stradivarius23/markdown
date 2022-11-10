@@ -4,24 +4,19 @@
 ```mermaid
 stateDiagram-v2
   state issue {
-    SI --> Fixing
-    II -->  Mac
-    II --> CCI
-    Mac --> Fixing
-    CCI --> Support
+    Could Couldn't
+    Could --> Fixing
+    Couldn't --> Support
     }
   SP: SP request
   BC: branch check
-  BA: branch is active
   BI: branch is inactive
   REJ: run essential jobs
   ABJ: activate the branch
   JS: jobs running successfully
   JUS: jobs fail
-  SI: source code issue
-  II: infrastructure issue 
-  CCI: shared infrastructure
-  Mac: self hosted mac nodes
+  Could: Could be fixed by our team
+  Couldn't: Couldn't be fixed bt our team
   Fixing: fixing the issue inside
   Support: support is needed
   Blocker: release blocker
@@ -54,7 +49,7 @@ stateDiagram-v2
      and show us that the pipeline is working as expected
   end note
   
-  note right of Blocker
+  note left of Blocker
       We can't fix issues related to Gerrit, Jenkins, Gitlab, AWS, Network, BitBar or Artifactory
   end note
   
@@ -93,4 +88,29 @@ Testing --> Testing_Success
 Testing --> Testing_Unsuccess
 Testing_Unsuccess --> issue
 Testing_Success --> [*]
+```
+
+```mermaid
+stateDiagram-v2
+  state debugging {
+    SI --> Fixing
+    II -->  Mac
+    II --> CCI
+    Mac --> Fixing
+    Mac --> Support 
+    CCI --> Support
+    }
+    
+  SI: source code issue
+  II: infrastructure issue 
+  CCI: shared infrastructure
+  Mac: self hosted mac nodes
+  Fixing: fixing the issue inside
+  Support: support is needed
+  Blocker: release blocker
+  Moving: moving forward during release
+  [*] --> debugging
+  Support --> Blocker
+  Fixing --> Moving
+  
 ```
