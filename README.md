@@ -3,8 +3,13 @@
 
 ```mermaid
 stateDiagram-v2
-  state join_state <<join>>
-  state fork_state <<fork>>
+  state issue {
+    II -->  Mac
+    II --> CCI
+    SI --> Fixing
+    Mac --> Fixing
+    CCI --> Support
+    }
   SP: SP request
   BC: branch check
   BA: branch is active
@@ -38,20 +43,22 @@ stateDiagram-v2
   Testing_Unsuccess: testing unsuccessful
   
   
-  note left of BC
+  note right of BC
      We always keep up to date only the master branch, 
      we need to make all necessary changes 
      on CI before starting the release
   end note
 
-  note left of REJ
+  note right of REJ
      These jobs are essential before starting the release 
      and show us that the pipeline is working as expected
   end note
   
-  note left of CCI
-      Gerrit, Jenkins, AWS nodes, BitBar, Network, Artifactory
+  note right of Blocker
+      We can't fix issues related to Gerrit, Jenkins, Gitlab, BitBar, Artifactory
   end note
+  
+
 
 [*] --> SP
 SP --> BC
@@ -62,37 +69,29 @@ BI --> ABJ
 ABJ --> REJ
 REJ --> JS
 REJ --> JUS
-JUS --> join_state
-II --> fork_state
-fork_state --> Mac
-fork_state --> CCI
-SI --> Fixing
-Mac --> Fixing
+JUS --> issue
 Fixing --> JS
-CCI --> Support
 Support --> Blocker
 JS --> Cherry_pick
 Cherry_pick --> PSV
 PSV --> PSV_Success
 PSV --> PSV_Unsuccess
-PSV_Unsuccess --> join_state
+PSV_Unsuccess --> issue
 PSV_Success --> SV
 SV --> SV_Success
 SV --> SV_Unsuccess
-SV_Unsuccess --> join_state
+SV_Unsuccess --> issue
 SV_Success --> FV
 FV --> FV_Success
 FV --> FV_Unsuccess
-FV_Unsuccess --> join_state
-join_state --> SI
-join_state --> II
+FV_Unsuccess --> issue
 FV_Success --> Release
 Release --> Release_Success
 Release --> Release_Unsuccess
-Release_Unsuccess --> join_state
+Release_Unsuccess --> issue
 Release_Success --> Testing
 Testing --> Testing_Success
 Testing --> Testing_Unsuccess
-Testing_Unsuccess --> join_state
+Testing_Unsuccess --> issue
 Testing_Success --> [*]
 ```
